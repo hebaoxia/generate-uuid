@@ -12,9 +12,9 @@ function generateUuid($size = 1, $length = 16)
     $date = date('Ymd');
     $placeholder = str_repeat('0', $length - strlen($date));
 
-    // 删除上30天以前的计数器，防止redis字段过多
+    // 删除30天以前的计数器，防止redis字段过多
     $expired_key = 'generate_uuid:' . date('Ymd', time() - 30 * 86400) . $placeholder;
-    if ($this->redis->exists($$expired_key)) {
+    if ($this->redis->exists($expired_key)) {
         $this->redis->delete($expired_key);
     }
 
