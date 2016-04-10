@@ -23,12 +23,11 @@ function genUUId($length = 16)
     $counterLen = strlen($counter);
 
     if ($counterLen > $maxLen) {
-        $redis->hIncrBy($table, $today, -1);
         return false;
     }
 
     if ($counter == 1 && $redis->hLen($table) > 7) {
-        cleanGenerator();
+        cleanGenerator(7);
     }
 
     return $today . str_repeat('0', ($maxLen - $counterLen)) . $counter;
@@ -51,12 +50,11 @@ function mGenUUId($uuidCount = 1, $uuidLength = 16)
 
     $counter    = $redis->hIncrBy($table, $today, $uuidCount);
     if (strlen($counter) > $maxLen) {
-        $redis->hIncrBy($table, $today, -$uuidCount);
         return false;
     }
 
     if ($counter == 1 && $redis->hLen($table) > 7) {
-        cleanGenerator();
+        cleanGenerator(7);
     }
 
     for ($i = $uuidCount; $i > 0; $i--) {
